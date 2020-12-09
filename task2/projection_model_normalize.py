@@ -13,7 +13,7 @@ def load_graph(FG_NAME, GP_NAME):
     
 
 def projection_method(word_in, emoji_in, FG, Gp1):
-       
+    
     if word_in not in FG:
         return 0
     # See the emoji of direct this word
@@ -43,21 +43,21 @@ def projection_method(word_in, emoji_in, FG, Gp1):
     if word_in not in Gp1:
         if emoji_in not in dict_emoji:
             return 0
-       
-        return res_weight
+        total = 0
+        for e in dict_emoji:
+            total += dict_emoji[e]
+        return dict_emoji[emoji_in]/total
     
     
     sum_weight_neibour = 0
     for neighbours in Gp1[word_in]:
         sum_weight_neibour += Gp1[word_in][neighbours]['weight']
     
-    
     for neighbours in Gp1[word_in]:    
         current_neighbour_weight = Gp1[word_in][neighbours]['weight']/sum_weight_neibour
         total_weight = 0
         weight_emoji = 0
         dict_e_tmp = {}
-#         print(e)
         for e in FG[neighbours]:
             total_weight += FG[neighbours][e]['weight']
             dict_e_tmp[e] = FG[neighbours][e]['weight']
@@ -67,12 +67,17 @@ def projection_method(word_in, emoji_in, FG, Gp1):
         for e in dict_e_tmp:
             if e in dict_emoji:
 #                 dict_emoji[e] += current_neighbour_weight * (dict_e_tmp[e]/total_weight)
-                dict_emoji[e] += 0.1 * (dict_e_tmp[e]/total_weight)
+                dict_emoji[e] += 0.01 * (dict_e_tmp[e]/total_weight)
             else:
 #                 dict_emoji[e] = current_neighbour_weight * (dict_e_tmp[e]/total_weight)
-                dict_emoji[e] = 0.1 * (dict_e_tmp[e]/total_weight)
+                dict_emoji[e] = 0.01 * (dict_e_tmp[e]/total_weight)
                 
     if emoji_in not in dict_emoji:
         return 0
-    return res_weight
+    total = 0
+    for e in dict_emoji:
+        total += dict_emoji[e]
+    return dict_emoji[emoji_in]/total
     
+
+                
